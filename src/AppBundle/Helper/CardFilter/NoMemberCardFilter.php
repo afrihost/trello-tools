@@ -7,16 +7,17 @@ use AppBundle\Helper\TrelloClient\Model\Card;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class NoMemberCardFilter implements CardFilterInterface
+class NoMemberCardFilter extends AbstractCardFilter
 {
 
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @param string          $boardId
      *
      * @return CardFilterInterface
      */
-    static public function setUp(InputInterface $input, OutputInterface $output)
+    static public function setUp(InputInterface $input, OutputInterface $output, $boardId)
     {
         $output->writeln('No configuration of '.self::getName().' filter required');
         return new self();

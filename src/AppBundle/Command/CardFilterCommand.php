@@ -23,6 +23,11 @@ class CardFilterCommand extends ContainerAwareCommand
     const MENU_OPTION_EXIT = "Exit";
 
     /**
+     * @var string
+     */
+    private $boardId;
+
+    /**
      * @var TrelloClient
      */
     private $trelloClient;
@@ -63,12 +68,12 @@ class CardFilterCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $boardId = 'XIvenLW5'; // af-skunkworks-ideas-brad
+        $this->boardId = 'XIvenLW5'; // af-skunkworks-ideas-brad
 
         $output->writeln('Loading cards from API...');
-        $this->boardCards = $this->getTrelloClient()->getBoardCards($boardId);
+        $this->boardCards = $this->getTrelloClient()->getBoardCards($this->getBoardId());
         $output->writeln('Loading lists from API...');
-        $this->boardLists = $this->getTrelloClient()->getBoardLists($boardId);
+        $this->boardLists = $this->getTrelloClient()->getBoardLists($this->getBoardId());
 
         $continue = true;
         while ($continue){
@@ -191,7 +196,7 @@ class CardFilterCommand extends ContainerAwareCommand
         try{
             $output->writeln('Setting up filter: '.$selectedName);
             /** @var CardFilterInterface $filter */
-            $filter = $filterOptions[$selectedName]::setUp($input, $output);
+            $filter = $filterOptions[$selectedName]::setUp($input, $output, $this->getBoardId());
             $this->getFilters()->add($filter);
             $output->writeln('Filter added');
         } catch (\Exception $e){
@@ -299,7 +304,7 @@ class CardFilterCommand extends ContainerAwareCommand
      * @return BoardList|mixed
      * @throws \Exception
      */
-    public function getBoardListById($listId)
+    protected function getBoardListById($listId)
     {
         foreach($this->getBoardLists() as $list){
             if($list->getId() == $listId){
@@ -307,5 +312,13 @@ class CardFilterCommand extends ContainerAwareCommand
             }
         }
         throw new \Exception('Board does not contain list with ID: '.$listId);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBoardId()
+    {
+        return $this->boardId;
     }
 }

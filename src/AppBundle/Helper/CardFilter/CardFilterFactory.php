@@ -20,6 +20,7 @@ class CardFilterFactory
     public function __construct()
     {
         $this->filterClasses = new ArrayCollection([
+            'AppBundle\Helper\CardFilter\ListCardFilter',
             'AppBundle\Helper\CardFilter\NoMemberCardFilter'
         ]);
 

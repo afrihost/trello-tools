@@ -15,10 +15,11 @@ interface CardFilterInterface
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @param string          $boardId
      *
      * @return CardFilterInterface
      */
-    static public function setUp(InputInterface $input, OutputInterface $output);
+    static public function setUp(InputInterface $input, OutputInterface $output, $boardId);
 
     /**
      * Should return TRUE if the provided card passes this filter and FALSE otherwise

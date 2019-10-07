@@ -3,6 +3,8 @@
 namespace AppBundle\Helper\TrelloClient;
 
 
+use AppBundle\Helper\TrelloClient\Model\BoardList;
+use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use JMS\Serializer\DeserializationContext;
@@ -60,7 +62,7 @@ class TrelloClient
     /**
      * @param string $boardId
      *
-     * @return mixed|string
+     * @return Card[]|ArrayCollection
      */
     public function getBoardCards($boardId)
     {
@@ -75,6 +77,11 @@ class TrelloClient
         );
     }
 
+    /**
+     * @param $boardId
+     *
+     * @return BoardList[]|ArrayCollection
+     */
     public function getBoardLists($boardId)
     {
         $queryParameters = [
