@@ -57,11 +57,17 @@ class TrelloClient
         ]);
     }
 
-    public function getBoardCards($boardId)
+    /**
+     * @param string $boardId
+     * @param bool   $archivedCards whether to get archived or active cards
+     *
+     * @return mixed|string
+     */
+    public function getBoardCards($boardId, $archivedCards = false)
     {
         $queryParameters = [
           'members' => true,
-
+          'closed' => $archivedCards
         ];
         return $this->makeRequest(
             'boards/'.$boardId.'/cards',
