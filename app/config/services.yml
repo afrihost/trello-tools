@@ -22,6 +22,10 @@ services:
         - '@jms_serializer'
       public: true
 
+    card_filter_factory:
+      class: AppBundle\Helper\CardFilter\CardFilterFactory
+      public: true
+
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     AppBundle\:
