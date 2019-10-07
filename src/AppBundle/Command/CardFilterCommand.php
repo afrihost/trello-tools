@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 
 use AppBundle\Helper\CardFilter\CardFilterInterface;
+use AppBundle\Helper\TrelloClient\Model\BoardList;
 use AppBundle\Helper\TrelloClient\Model\Card;
 use AppBundle\Helper\TrelloClient\TrelloClient;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +31,11 @@ class CardFilterCommand extends ContainerAwareCommand
      * @var Card[]|ArrayCollection
      */
     private $boardCards;
+
+    /**
+     * @var BoardList[]|ArrayCollection
+     */
+    private $boardLists;
 
     /**
      * @var Card[]|ArrayCollection
@@ -61,6 +67,8 @@ class CardFilterCommand extends ContainerAwareCommand
 
         $output->writeln('Loading cards from API...');
         $this->boardCards = $this->getTrelloClient()->getBoardCards($boardId);
+        $output->writeln('Loading lists from API...');
+        $this->boardLists = $this->getTrelloClient()->getBoardLists($boardId);
 
         $continue = true;
         while ($continue){
@@ -121,6 +129,11 @@ class CardFilterCommand extends ContainerAwareCommand
         return  $questionHelper->ask($input, $output, $menuOptions);
     }
 
+    /**
+     * @param OutputInterface $output
+     *
+     * @throws \Exception
+     */
     protected function printFilteredCards(OutputInterface $output)
     {
         $output->writeln('Printing filtered Cards...');
@@ -132,6 +145,9 @@ class CardFilterCommand extends ContainerAwareCommand
 
             $rows = [];
             $rows[] = ['Name:', $card->getName()];
+
+            $list = $this->getBoardListById($card->getIdList());
+            $rows[] = ['List:', $list->getName()];
 
             $memberNames = array_map(function ($member){return $member->getFullName();}, $card->getMembers()->toArray());
             $rows[] = ['Members:', implode(', ', $memberNames)];
@@ -267,5 +283,29 @@ class CardFilterCommand extends ContainerAwareCommand
     protected function getFilters()
     {
         return $this->filters;
+    }
+
+    /**
+     * @return BoardList[]|ArrayCollection
+     */
+    public function getBoardLists()
+    {
+        return $this->boardLists;
+    }
+
+    /**
+     * @param $listId
+     *
+     * @return BoardList|mixed
+     * @throws \Exception
+     */
+    public function getBoardListById($listId)
+    {
+        foreach($this->getBoardLists() as $list){
+            if($list->getId() == $listId){
+                return $list;
+            }
+        }
+        throw new \Exception('Board does not contain list with ID: '.$listId);
     }
 }

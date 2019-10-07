@@ -75,6 +75,19 @@ class TrelloClient
         );
     }
 
+    public function getBoardLists($boardId)
+    {
+        $queryParameters = [
+            'cards' => 'none',
+        ];
+        return $this->makeRequest(
+            'boards/'.$boardId.'/lists',
+            'GET',
+            'ArrayCollection<AppBundle\Helper\TrelloClient\Model\BoardList>',
+            $queryParameters
+        );
+    }
+
 
     protected function makeRequest($path, $method = 'GET', $expectedResponseClass = null, array $parameters = [])
     {
@@ -89,6 +102,7 @@ class TrelloClient
         $rawBody = $response->getBody()->getContents();
 
         // Attempt to de-serialize response into objects if an expected class has been provided
+        // dump(json_decode($rawBody, true));
         if(!is_null($expectedResponseClass)){
             $deserializationContext = DeserializationContext::create()
                 ->enableMaxDepthChecks();

@@ -66,6 +66,15 @@ class Card
     private $dueComplete;
 
     /**
+     * The ID of the list the card is in
+     *
+     * @var string
+     * @Serializer\Type("string")
+     * @Serializer\SerializedName("idList")
+     */
+    private $idList;
+
+    /**
      * Array of label objects on this card
      *
      * @var ArrayCollection|Label[]
@@ -160,6 +169,14 @@ class Card
     public function isDueComplete()
     {
         return $this->dueComplete;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdList()
+    {
+        return $this->idList;
     }
 
     /**
