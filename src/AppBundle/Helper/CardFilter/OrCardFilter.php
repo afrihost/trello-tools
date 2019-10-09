@@ -42,7 +42,12 @@ class OrCardFilter extends AbstractCardFilter
 
         while(true){
             $output->writeln('Choose a Filter to be logically ORed with other filters');
-            $filter->wrappedFilters->add($cardFilterFactory->interactiveMake($input, $output, $boardId));
+
+            try{
+                $filter->wrappedFilters->add($cardFilterFactory->interactiveMake($input, $output, $boardId));
+            } catch (\Exception $e){
+                $output->writeln('OR Filter set up interrupted: '.$e->getMessage());
+            }
 
             $exitQuestion = new ChoiceQuestion(
                 'Would you like to add another Filter to logically OR?',
