@@ -29,7 +29,7 @@ class NotCardFilter extends AbstractCardFilter
     {
         $cardFilterFactory = self::getContainer()->get('card_filter_factory');
 
-        $output->writeln('Another filter must be chosen to be negated by this filter');
+        $output->writeln('Choose a filter to be logically Negated by this filter');
         $filter = new self();
         $filter->wrappedFilter = $cardFilterFactory->interactiveMake($input, $output, $boardId);
         $output->writeln($filter->wrappedFilter::getName().' filter wrapped with a negation');
@@ -55,7 +55,7 @@ class NotCardFilter extends AbstractCardFilter
      */
     static public function getName()
     {
-        return 'Not';
+        return 'NOT';
     }
 
     /**
