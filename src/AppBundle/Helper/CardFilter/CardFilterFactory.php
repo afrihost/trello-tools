@@ -23,24 +23,33 @@ class CardFilterFactory
      */
     public function __construct()
     {
-        $this->filterClasses = new ArrayCollection([
+        // Configure available filter classes here
+        $availableFilterClasses = [
             'AppBundle\Helper\CardFilter\ListCardFilter',
             'AppBundle\Helper\CardFilter\NoMemberCardFilter',
             'AppBundle\Helper\CardFilter\NotCardFilter'
-        ]);
-        // TODO add automatic sorting of filters by getName()
+        ];
+        $this->validateFilterClasses($availableFilterClasses);
 
-        $this->validateFilterClasses();
+
+        // Sort classes by their name
+        usort($availableFilterClasses, function ($leftClass, $rightClass){
+            return $leftClass::getName() <=> $rightClass::getName();
+        });
+        $this->filterClasses = new ArrayCollection($availableFilterClasses);
     }
 
     /**
      * Checks that all the configured classes are valid card filters
+     *
+     * @param array $filterClassNames
+     *
      * @throws \Exception
      */
-    protected function validateFilterClasses()
+    protected function validateFilterClasses(array $filterClassNames)
     {
         $existingFilterNames = [];
-        foreach ($this->filterClasses as $class){
+        foreach ($filterClassNames as $class){
             if(!is_subclass_of($class, CardFilterInterface::class)){
                 throw new \Exception($class.' does not implement the CardFilterInterface');
             }
