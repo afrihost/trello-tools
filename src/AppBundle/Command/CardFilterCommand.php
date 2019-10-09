@@ -54,7 +54,7 @@ class CardFilterCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-        $this->setName('card:filter')
+        $this->setName('filter:cards')
             ->setDescription('Retrieves all the cards on a board and allows custom filters to be applied client-side');
     }
 
@@ -181,25 +181,11 @@ class CardFilterCommand extends ContainerAwareCommand
     {
         // Display option of filters that can be added
         $cardFilterFactory = $this->getContainer()->get('card_filter_factory');
-        $filterOptions = [];
-        foreach($cardFilterFactory->getFilterClasses() as $filterClass ){
-            $filterOptions[$filterClass::getName()] = $filterClass;
-        }
-        $filterOptionQuestion = new ChoiceQuestion('Select Filter to add:', array_merge(array_keys($filterOptions), ['<- Back']));
-        $questionHelper = $this->getHelper('question');
-        $selectedName = $questionHelper->ask($input, $output, $filterOptionQuestion);
-        if($selectedName == '<- Back'){
-            return;
-        }
-
-        // Setup and add filter
         try{
-            $output->writeln('Setting up filter: '.$selectedName);
-            /** @var CardFilterInterface $filter */
-            $filter = $filterOptions[$selectedName]::setUp($input, $output, $this->getBoardId());
+            $filter = $cardFilterFactory->interactiveMake($input, $output, $this->getBoardId());
             $this->getFilters()->add($filter);
             $output->writeln('Filter added');
-        } catch (\Exception $e){
+        }catch (\Exception $e){
             $output->writeln('Filter set up interrupted: '.$e->getMessage());
         }
     }

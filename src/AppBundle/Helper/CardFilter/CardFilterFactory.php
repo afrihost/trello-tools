@@ -4,6 +4,10 @@ namespace AppBundle\Helper\CardFilter;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class CardFilterFactory
 {
@@ -21,8 +25,10 @@ class CardFilterFactory
     {
         $this->filterClasses = new ArrayCollection([
             'AppBundle\Helper\CardFilter\ListCardFilter',
-            'AppBundle\Helper\CardFilter\NoMemberCardFilter'
+            'AppBundle\Helper\CardFilter\NoMemberCardFilter',
+            'AppBundle\Helper\CardFilter\NotCardFilter'
         ]);
+        // TODO add automatic sorting of filters by getName()
 
         $this->validateFilterClasses();
     }
@@ -44,6 +50,36 @@ class CardFilterFactory
             }
             $existingFilterNames[] = $class::getName();
         }
+    }
+
+    /**
+     * Factory function that creates Card Filters using interactive input from the user
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param string          $boardId
+     *
+     * @return CardFilterInterface
+     * @throws \Exception
+     */
+    public function interactiveMake(InputInterface $input, OutputInterface $output, $boardId)
+    {
+        // Display option of filters that can be created
+        $filterOptions = [];
+        foreach($this->getFilterClasses() as $filterClass ){
+            $filterOptions[$filterClass::getName()] = $filterClass;
+        }
+        $filterOptionQuestion = new ChoiceQuestion('Select Filter:', array_merge(array_keys($filterOptions), ['<- Back']));
+        $questionHelper = new QuestionHelper();
+        $selectedName = $questionHelper->ask($input, $output, $filterOptionQuestion);
+        if($selectedName == '<- Back'){
+            throw new \Exception('Back option selected');
+        }
+
+        // Setup filter
+        $output->writeln('Configure Filter: '.$selectedName);
+        /** @var CardFilterInterface $filter */
+        return $filterOptions[$selectedName]::setUp($input, $output, $boardId);
     }
 
     /**
