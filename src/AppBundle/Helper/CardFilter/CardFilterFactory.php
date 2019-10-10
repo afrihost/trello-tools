@@ -26,6 +26,7 @@ class CardFilterFactory
         // Configure available filter classes here
         $availableFilterClasses = [
             'AppBundle\Helper\CardFilter\ListCardFilter',
+            'AppBundle\Helper\CardFilter\NoLabelCardFilter',
             'AppBundle\Helper\CardFilter\NoMemberCardFilter',
             'AppBundle\Helper\CardFilter\MemberCardFilter',
             'AppBundle\Helper\CardFilter\NotCardFilter',
