@@ -29,7 +29,8 @@ class CardFilterFactory
             'AppBundle\Helper\CardFilter\NoMemberCardFilter',
             'AppBundle\Helper\CardFilter\MemberCardFilter',
             'AppBundle\Helper\CardFilter\NotCardFilter',
-            'AppBundle\Helper\CardFilter\OrCardFilter'
+            'AppBundle\Helper\CardFilter\OrCardFilter',
+            'AppBundle\Helper\CardFilter\ActivitySinceCardFilter'
         ];
         $this->validateFilterClasses($availableFilterClasses);
 

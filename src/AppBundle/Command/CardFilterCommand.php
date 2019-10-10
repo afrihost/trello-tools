@@ -157,6 +157,8 @@ class CardFilterCommand extends ContainerAwareCommand
             $memberNames = array_map(function ($member){return $member->getFullName();}, $card->getMembers()->toArray());
             $rows[] = ['Members:', implode(', ', $memberNames)];
 
+            $rows[] = ['Last Activity: ', (empty($card->getDateLastActivity()) ? '-': $card->getDateLastActivity()->format('Y-m-d H:i:s'))];
+
             // TODO Add indication of dueComplete field
             $rows[] = ['Due:', (is_null($card->getDue()) ? '-' : $card->getDue()->format('Y-m-d H:i:s'))];
 

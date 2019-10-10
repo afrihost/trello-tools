@@ -31,8 +31,7 @@ class Card
      * updating the name field of a checklist item on a card does not create an action but does update the card and
      * board's dateLastActivity value.
      *
-     * @var string
-     * @Serializer\Type("string")
+     * @var \DateTime
      * @Serializer\SerializedName("dateLastActivity")
      * @Serializer\Type("DateTime<'Y-m-d\TH:i:s.uT'>")
      *
@@ -140,7 +139,7 @@ class Card
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
     public function getDateLastActivity()
     {
