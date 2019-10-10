@@ -207,20 +207,21 @@ class CardFilterCommand extends ContainerAwareCommand
         foreach ($this->getFilters() as $index => $filter){
             $output->writeln('  [<info>'.$index.'</info>] '.$filter::getName().' ('.$filter->getConfigDescription().')');
         }
-        $output->writeln('  [<info>'.$this->getFilters()->count().'</info>] <- Back');
+        $output->writeln('  [<info>b</info>] <- Back');
         $question = new Question('');
         $numberFilters = $this->getFilters()->count();
 
-        $question->setValidator(function($answer) use ($numberFilters) {
-            if($answer < 0 || $answer > $numberFilters ){
-                throw new \RuntimeException('Please select a value between 0 and '.($numberFilters -1));
+        $filterIndexes = $this->getFilters()->getKeys();
+        $question->setValidator(function($answer) use ($numberFilters, $filterIndexes) {
+            if($answer != 'b' && !in_array($answer, $filterIndexes)){
+                throw new \RuntimeException('Invalid option selected');
             }
             return $answer;
         });
         $questionHelper = $this->getHelper('question');
         $output->write(' > ');
         $selectedIndex = $questionHelper->ask($input, $output, $question);
-        if($selectedIndex == $this->getFilters()->count()){ // back option selected
+        if($selectedIndex == 'b'){ // back option selected
             return;
         }
 
