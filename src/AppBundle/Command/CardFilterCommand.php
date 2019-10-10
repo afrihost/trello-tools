@@ -155,7 +155,7 @@ class CardFilterCommand extends ContainerAwareCommand
             $rows[] = ['List:', $list->getName()];
 
             $memberNames = array_map(function ($member){return $member->getFullName();}, $card->getMembers()->toArray());
-            $rows[] = ['Members:', implode(', ', $memberNames)];
+            $rows[] = ['Members:', (empty($memberNames) ? '-' : implode(', ', $memberNames))];
 
             $rows[] = ['Last Activity: ', (empty($card->getDateLastActivity()) ? '-': $card->getDateLastActivity()->format('Y-m-d H:i:s'))];
 
@@ -168,7 +168,7 @@ class CardFilterCommand extends ContainerAwareCommand
                 $labelName .= ' ('.ucfirst($label->getColor()).')'; // TODO see if this can be replaced with console colours
                 $labelNames[] = $labelName;
             }
-            $rows[] = ['Labels:', implode(', ', $labelNames)];
+            $rows[] = ['Labels:', (empty($labelNames) ? '-' : implode(', ', $labelNames))];
 
             $rows[] = ['URL:', $card->getShortUrl()];
 
