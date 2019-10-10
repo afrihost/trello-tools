@@ -21,6 +21,7 @@ class CardFilterCommand extends ContainerAwareCommand
     const MENU_OPTION_ADD_FILTER = "Add Filter";
     const MENU_OPTION_REMOVE_FILTER = "Remove Filter";
     const MENU_OPTION_PRINT_CARDS = "Print Cards";
+    const MENU_OPTION_REFRESH_CARDS = "Refresh Cards";
     const MENU_OPTION_EXIT = "Exit";
 
     /**
@@ -92,6 +93,9 @@ class CardFilterCommand extends ContainerAwareCommand
                 case self::MENU_OPTION_PRINT_CARDS:
                     $this->printFilteredCards($output);
                     break;
+                case self::MENU_OPTION_REFRESH_CARDS:
+                    $this->refreshCards($output);
+                    break;
                 case self::MENU_OPTION_EXIT:
                     $continue = false;
                     break;
@@ -130,6 +134,7 @@ class CardFilterCommand extends ContainerAwareCommand
                 self::MENU_OPTION_ADD_FILTER,
                 self::MENU_OPTION_REMOVE_FILTER,
                 self::MENU_OPTION_PRINT_CARDS,
+                self::MENU_OPTION_REFRESH_CARDS,
                 self::MENU_OPTION_EXIT
             ]
         );
@@ -227,6 +232,13 @@ class CardFilterCommand extends ContainerAwareCommand
 
         $this->getFilters()->remove($selectedIndex);
         $output->writeln('Configured filter removed');
+    }
+
+    protected function refreshCards(OutputInterface $output)
+    {
+        $output->writeln('Loading cards from API...');
+        $this->boardCards = $this->getTrelloClient()->getBoardCards($this->getBoardId());
+        $output->writeln('Cards refreshed');
     }
 
     /**
