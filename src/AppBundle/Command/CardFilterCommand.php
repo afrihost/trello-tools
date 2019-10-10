@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
@@ -55,6 +56,8 @@ class CardFilterCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('filter:cards')
+            ->addOption('board_id', 'b', InputOption::VALUE_REQUIRED, 'Trello ID of the Board to '.
+                'retrieve cards from', '9ZScVBSt') // default 'current-work'
             ->setDescription('Retrieves all the cards on a board and allows custom filters to be applied client-side');
     }
 
@@ -63,13 +66,13 @@ class CardFilterCommand extends ContainerAwareCommand
         $this->trelloClient = $this->getContainer()->get('trello_client');
         $this->filteredCards = new ArrayCollection();
         $this->filters = new ArrayCollection();
+
+        $this->boardId = $input->getOption('board_id');
     }
 
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->boardId = 'XIvenLW5'; // af-skunkworks-ideas-brad
-
         $output->writeln('Loading cards from API...');
         $this->boardCards = $this->getTrelloClient()->getBoardCards($this->getBoardId());
         $output->writeln('Loading lists from API...');
