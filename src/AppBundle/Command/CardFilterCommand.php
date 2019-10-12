@@ -58,10 +58,16 @@ class CardFilterCommand extends ContainerAwareCommand
     {
         $this->setName('filter:cards')
             ->addOption('board_id', 'b', InputOption::VALUE_REQUIRED, 'Trello ID of the Board to '.
-                'retrieve cards from', '9ZScVBSt') // default 'current-work'
+                'retrieve cards from')
             ->setDescription('Retrieves all the cards on a board and allows custom filters to be applied client-side');
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @throws \Exception
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->trelloClient = $this->getContainer()->get('trello_client');
@@ -69,6 +75,9 @@ class CardFilterCommand extends ContainerAwareCommand
         $this->filters = new ArrayCollection();
 
         $this->boardId = $input->getOption('board_id');
+        if(empty($this->boardId)){
+            throw new \Exception('Please provide a --board_id parameter');
+        }
     }
 
 
