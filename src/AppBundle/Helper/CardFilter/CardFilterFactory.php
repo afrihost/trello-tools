@@ -99,14 +99,12 @@ class CardFilterFactory
     private function getFilesInDirectoryAndSubdirectories (string $path = __DIR__)
     {
         $arrayOfClasses = [];
-        foreach (array_keys(ClassMapGenerator::createMap($path)) as $class) {
+        foreach (array_keys(\Composer\Autoload\ClassMapGenerator::createMap($path)) as $class) {
             if ($class === AbstractCardFilter::class || $class === CardFilterInterface::class || $class === __CLASS__) {
                 continue;
             }
             $arrayOfClasses[] = $class;
         }
-
-        var_dump($arrayOfClasses);
 
         return $arrayOfClasses;
     }
