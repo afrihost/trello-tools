@@ -1,7 +1,7 @@
 # Trello Tools
 
-This repo contains a internal CLI tools that we use to manage our [Trello](https://trello.com/) Boards. We've released it 
-as OpenSource in the hope that it helps others.
+This repo contains internal CLI tools that we use to manage our [Trello](https://trello.com/) Boards. We've released it 
+as OpenSource in the hope that it can help others.
 
 ## Usage
 Currently the main tool in this repo allows for advanced filtering of Cards on a board.
@@ -30,7 +30,7 @@ Options:
 
 ## Installation
 
-# 1) Download
+### 1) Download
 
 Clone this repo
 ```
@@ -42,12 +42,12 @@ Change to its directory
 $ cd trello-tools.
 ```
 
-# 2) Install Packages
+### 2) Install Packages
 ```
 $ composer install
 ```
 
-During the Composer Install, it will ask you for the following Symfony parameters:
+During the Composer install, it will ask you for the following Symfony parameters:
 ```
 trello_api_key (getyoursonceloggedintotrello): XXXXXXXXXXXXX
 trello_api_token (authoriseoneforyourownaccount): XXXXXXXXXXXXX
