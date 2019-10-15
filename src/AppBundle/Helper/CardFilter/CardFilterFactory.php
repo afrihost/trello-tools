@@ -4,6 +4,7 @@ namespace AppBundle\Helper\CardFilter;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\ClassLoader\ClassMapGenerator;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,17 +24,8 @@ class CardFilterFactory
      */
     public function __construct()
     {
-        // Configure available filter classes here
-        $availableFilterClasses = [
-            'AppBundle\Helper\CardFilter\ListCardFilter',
-            'AppBundle\Helper\CardFilter\NoLabelCardFilter',
-            'AppBundle\Helper\CardFilter\LabelColourCardFilter',
-            'AppBundle\Helper\CardFilter\NoMemberCardFilter',
-            'AppBundle\Helper\CardFilter\MemberCardFilter',
-            'AppBundle\Helper\CardFilter\NotCardFilter',
-            'AppBundle\Helper\CardFilter\OrCardFilter',
-            'AppBundle\Helper\CardFilter\ActivitySinceCardFilter'
-        ];
+
+        $availableFilterClasses = $this->getFilesInDirectoryAndSubdirectories();
         $this->validateFilterClasses($availableFilterClasses);
 
 
@@ -55,12 +47,12 @@ class CardFilterFactory
     {
         $existingFilterNames = [];
         foreach ($filterClassNames as $class){
-            if(!is_subclass_of($class, CardFilterInterface::class)){
+            if(!class_implements($class, CardFilterInterface::class)){
                 throw new \Exception($class.' does not implement the CardFilterInterface');
             }
 
             if(in_array($class::getName(), $existingFilterNames)){
-                throw new \Exception('More thane one filter uses the name \''.$class::geName().'\'');
+                throw new \Exception('More than one filter uses the name \''.$class::geName().'\'');
             }
             $existingFilterNames[] = $class::getName();
         }
@@ -102,5 +94,18 @@ class CardFilterFactory
     public function getFilterClasses()
     {
         return $this->filterClasses;
+    }
+
+    private function getFilesInDirectoryAndSubdirectories (string $path = __DIR__)
+    {
+        $arrayOfClasses = [];
+        foreach (array_keys(\Composer\Autoload\ClassMapGenerator::createMap($path)) as $class) {
+            $reflectionClass = new \ReflectionClass($class);
+            if (!$reflectionClass->isAbstract() && $reflectionClass->implementsInterface(CardFilterInterface::class)) {
+                $arrayOfClasses[] = $class;
+            }
+        }
+
+        return $arrayOfClasses;
     }
 }
