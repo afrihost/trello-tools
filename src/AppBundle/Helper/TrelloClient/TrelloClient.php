@@ -3,7 +3,9 @@
 namespace AppBundle\Helper\TrelloClient;
 
 
+use AppBundle\Helper\TrelloClient\Model\Board;
 use AppBundle\Helper\TrelloClient\Model\BoardList;
+use AppBundle\Helper\TrelloClient\Model\Card;
 use AppBundle\Helper\TrelloClient\Model\Member;
 use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
@@ -58,6 +60,24 @@ class TrelloClient
             RequestOptions::TIMEOUT => '30',
             RequestOptions::HTTP_ERRORS => true
         ]);
+    }
+
+    /**
+     * @param $boardId
+     *
+     * @return Board
+     */
+    public function getBoard($boardId)
+    {
+        $queryParameters = [
+            'fields' => 'id,name,shortUrl,dateLastActivity',
+        ];
+        return $this->makeRequest(
+            'boards/'.$boardId,
+            'GET',
+            'AppBundle\Helper\TrelloClient\Model\Board',
+            $queryParameters
+        );
     }
 
     /**

@@ -83,10 +83,25 @@ class CardFilterCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('Loading board from API... ');
+        $board = $this->getTrelloClient()->getBoard($this->getBoardId());
         $output->writeln('Loading cards from API...');
         $this->boardCards = $this->getTrelloClient()->getBoardCards($this->getBoardId());
         $output->writeln('Loading lists from API...');
         $this->boardLists = $this->getTrelloClient()->getBoardLists($this->getBoardId());
+
+        // Print board information
+        $output->writeln(PHP_EOL.'+----------------------------------------------------------------+');
+        $table = new Table($output);
+        $table->setStyle('compact');
+        $table->setColumnWidths([15, 50]);
+        $table->setRows([
+            ['Board Name:', $board->getName()],
+            ['Board URL:', $board->getShortUrl()],
+            ['Last Activity:', $board->getDateLastActivity()->format('Y-m-d H:i:s')]
+        ]);
+        $table->render();
+        $output->writeln('+----------------------------------------------------------------+'.PHP_EOL);
 
         $continue = true;
         while ($continue){
