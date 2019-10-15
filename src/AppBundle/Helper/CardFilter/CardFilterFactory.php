@@ -100,10 +100,10 @@ class CardFilterFactory
     {
         $arrayOfClasses = [];
         foreach (array_keys(\Composer\Autoload\ClassMapGenerator::createMap($path)) as $class) {
-            if ($class === AbstractCardFilter::class || $class === CardFilterInterface::class || $class === __CLASS__) {
-                continue;
+            $reflectionClass = new \ReflectionClass($class);
+            if (!$reflectionClass->isAbstract() && $reflectionClass->implementsInterface(CardFilterInterface::class)) {
+                $arrayOfClasses[] = $class;
             }
-            $arrayOfClasses[] = $class;
         }
 
         return $arrayOfClasses;
