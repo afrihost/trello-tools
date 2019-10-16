@@ -19,6 +19,7 @@ Active Filters
  OR               - (List Name: Next) OR (List Name: OnHold) OR (List Name: WIP)
  Has No Members   - Any card that has no members
  NOT              - NOT( Colour: Green )
+ Activity Since   - Since: 2019-10-09 18:38:03
 Options:
   [0] Add Filter
   [1] Remove Filter
