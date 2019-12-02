@@ -6,6 +6,7 @@ namespace AppBundle\Helper\TrelloClient;
 use AppBundle\Helper\TrelloClient\Model\Board;
 use AppBundle\Helper\TrelloClient\Model\BoardList;
 use AppBundle\Helper\TrelloClient\Model\Card;
+use AppBundle\Helper\TrelloClient\Model\Label;
 use AppBundle\Helper\TrelloClient\Model\Member;
 use Doctrine\Common\Collections\ArrayCollection;
 use GuzzleHttp\Client;
@@ -121,7 +122,7 @@ class TrelloClient
      *
      * @return Member[]|ArrayCollection
      */
-    public function getBoardMembers($boardId)
+    public function  getBoardMembers($boardId)
     {
         $queryParameters = [
             'fields' => 'id,avatarUrl,initials,fullName,username',
@@ -132,6 +133,24 @@ class TrelloClient
             'ArrayCollection<AppBundle\Helper\TrelloClient\Model\Member>',
             $queryParameters
         );
+    }
+
+	/**
+	 * @param $boardId
+	 *
+	 * @return Label[]\ArrayCollection
+	 */
+    public function getBoardLabels($boardId)
+    {
+	    $queryParameters = [
+		    'fields' => 'all',
+	    ];
+	    return $this->makeRequest(
+		    'boards/'.$boardId.'/labels',
+		    'GET',
+		    'ArrayCollection<AppBundle\Helper\TrelloClient\Model\Label>',
+		    $queryParameters
+	    );
     }
 
 
